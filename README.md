@@ -57,33 +57,6 @@ Traditional notice boards in schools and colleges are static and paper-based. St
 
 ---
 
-## 🚀 Setup and Installation
-
-1.  **Clone the Repository:**
-    ```bash
-    git clone [https://github.com/your-username/your-repository-name.git](https://github.com/your-username/your-repository-name.git)
-    ```
-
-2.  **Configure Arduino IDE:**
-    * Install the ESP32 board definitions by adding the following URL to `File > Preferences > Additional Board Manager URLs`:
-        ```
-        [https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json](https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json)
-        ```
-    * Go to `Tools > Board > Boards Manager` and install "esp32".
-    * Select `ESP32 Dev Module` as your board.
-
-3.  **Install Libraries:**
-    * In the Arduino IDE, go to `Sketch > Include Library > Manage Libraries...`.
-    * Search for and install `MFRC522`, `Adafruit GFX`, and `Adafruit SSD1306`.
-
-4.  **Add Student Data:**
-    * Open the main `.ino` sketch file.
-    * Modify the `Student students[]` array to include your own RFID card UIDs, names, and notices.
-
-5.  **Upload:**
-    * Connect your ESP32, select the correct COM port, and click the "Upload" button.
-
----
 
 ## 💡 How It Works
 
