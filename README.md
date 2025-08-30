@@ -1,2 +1,109 @@
-# Project-Tap-To-See
-An IoT-based smart notice board using an ESP32 and RFID to display personalized student updates with a simple tap of an ID card.
+# Next-Gen Interactive Smart Notice Board 📢
+
+An IoT-based smart notice board using an ESP32 and RFID to display personalized, real-time information for students.
+
+
+
+---
+
+## 🎯 Problem Statement
+
+Traditional notice boards in schools and colleges are static and paper-based. Students often miss critical, personalized updates (exam schedules, lab slots, event notices) because the information is cluttered and not updated in real-time. This project aims to solve that problem.
+
+---
+
+## ✨ Key Features
+
+-   ✅ **RFID-based Personalization**: Each student taps their ID card to see notices relevant only to them.
+-   📡 **Real-Time Updates**: Can be extended with Wi-Fi to allow faculty to push notices remotely.
+-   📺 **Clear OLED Display**: Information is displayed on a clean, crisp OLED screen.
+-   ⚙️ **Scalable**: Built with the powerful ESP32, allowing for future expansion with more sensors or cloud integration.
+
+---
+
+## 🛠️ Tech Stack
+
+### Hardware
+* ESP32 DevKitC Board
+* MFRC522 RFID Reader + RFID Cards/Fobs
+* SSD1306 0.96" I2C OLED Display
+* Breadboard and Jumper Wires
+
+### Software
+* Arduino IDE
+* C++ (Arduino Framework)
+* **Libraries:**
+    * `MFRC522` by GitHubCommunity
+    * `Adafruit GFX`
+    * `Adafruit SSD1306`
+
+---
+
+## 🔌 Hardware Connections
+
+| Device             | Pin        | ESP32 Pin   |
+| ------------------ | ---------- | ----------- |
+| **MFRC522 (RFID)** | **SDA (SS)** | **GPIO 5** |
+|                    | **SCK** | **GPIO 18** |
+|                    | **MOSI** | **GPIO 23** |
+|                    | **MISO** | **GPIO 19** |
+|                    | **RST** | **GPIO 4** |
+|                    | **3.3V** | **3V3** |
+|                    | **GND** | **GND** |
+| **SSD1306 (OLED)** | **SCL** | **GPIO 22** |
+|                    | **SDA** | **GPIO 21** |
+|                    | **VCC** | **3V3** |
+|                    | **GND** | **GND** |
+
+---
+
+## 🚀 Setup and Installation
+
+1.  **Clone the Repository:**
+    ```bash
+    git clone [https://github.com/your-username/your-repository-name.git](https://github.com/your-username/your-repository-name.git)
+    ```
+
+2.  **Configure Arduino IDE:**
+    * Install the ESP32 board definitions by adding the following URL to `File > Preferences > Additional Board Manager URLs`:
+        ```
+        [https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json](https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json)
+        ```
+    * Go to `Tools > Board > Boards Manager` and install "esp32".
+    * Select `ESP32 Dev Module` as your board.
+
+3.  **Install Libraries:**
+    * In the Arduino IDE, go to `Sketch > Include Library > Manage Libraries...`.
+    * Search for and install `MFRC522`, `Adafruit GFX`, and `Adafruit SSD1306`.
+
+4.  **Add Student Data:**
+    * Open the main `.ino` sketch file.
+    * Modify the `Student students[]` array to include your own RFID card UIDs, names, and notices.
+
+5.  **Upload:**
+    * Connect your ESP32, select the correct COM port, and click the "Upload" button.
+
+---
+
+## 💡 How It Works
+
+The system boots up and displays a "Scan ID" message. When an RFID card is tapped on the reader:
+1.  The ESP32 reads the card's unique ID (UID).
+2.  It searches the pre-defined list of students to find a matching UID.
+3.  If a match is found, the student's name and personalized notice are displayed on the OLED screen.
+4.  If no match is found, an "ACCESS DENIED" message is shown.
+5.  After 5 seconds, the screen resets to the default message, ready for the next scan.
+
+---
+
+## 🔮 Future Enhancements
+
+-   **Cloud Integration:** Connect to Google Sheets or Firebase to manage student data remotely.
+-   **IoT Sensors:** Add sensors like a DHT11 (temperature/humidity) or MQ135 (air quality) to display environmental data.
+-   **Web Dashboard:** Create a web interface for faculty to easily update notices.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
