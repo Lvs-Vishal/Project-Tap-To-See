@@ -9,14 +9,13 @@
 #include "time.h"
 
 // --- User Configuration ---
-const char* WIFI_SSID = "Durai";
-const char* WIFI_PASS = "hotspot password";
-String GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyTAxNOuqI4pBfY_r4ZOc4SpLZXjSPuKlpmqdLanhvbiHkQOzS2CQFU48rvnRhZr-4/exec";
+const char* WIFI_SSID = "[ID]";
+const char* WIFI_PASS = "[PASSWORD]";
+String GOOGLE_SCRIPT_URL = "[Your_Scrip_URL]";
 
-
-// --- Time Configuration (IST: UTC+5:30) ---
+// --- Time Configuration ---
 const char* NTP_SERVER = "pool.ntp.org";
-const long  GMT_OFFSET_SEC = 19800; 
+const long  GMT_OFFSET_SEC = 19800; // India Standard Time (IST) is UTC+5:30 (5.5 * 3600)
 const int   DAYLIGHT_OFFSET_SEC = 0;
 
 // --- Hardware Pins & Objects ---
@@ -68,14 +67,19 @@ void loop() {
   }
 
   // A card was scanned, get its UID
+  // --- CORRECTED UID FORMATTING ---
   String cardUID = "";
   for (byte i = 0; i < mfrc522.uid.size; i++) {
-    cardUID += (mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
+    // Add a leading zero if the hex value is a single digit
+    if (mfrc522.uid.uidByte[i] < 0x10) {
+      cardUID += "0";
+    }
     cardUID += String(mfrc522.uid.uidByte[i], HEX);
   }
-  cardUID.trim();
   cardUID.toUpperCase();
-  Serial.println("Card Scanned: " + cardUID);
+  // The UID will now be a solid string like "22631205"
+  
+  Serial.println("Card Scanned (Formatted): " + cardUID);
 
   // --- API Call to Google Sheet ---
   updateAndDisplayInfo(cardUID);
