@@ -99,8 +99,3 @@ This project uses a client-server model where the Google Sheet acts as the centr
 -   **Add IoT Sensors**: Integrate sensors like a DHT11 (temperature/humidity) to display live environmental data on the device.
 -   **Mobile Notifications**: Implement a system to push critical notices directly to a student's phone.
 
----
-
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
