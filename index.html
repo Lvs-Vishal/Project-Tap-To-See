@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base target="_top">
+    <title>Smart Notice Board Dashboard</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- SweetAlert2 for beautiful popups -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --primary-color: #3f51b5;
+            --primary-dark: #303f9f;
+            --accent-color: #ff4081;
+            --background-color: #f4f7fc;
+            --text-color: #333;
+            --card-bg-color: #ffffff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --border-color: #e0e0e0;
+        }
+
+        body.dark-mode {
+            --primary-color: #7986cb;
+            --primary-dark: #5c6bc0;
+            --accent-color: #f06292;
+            --background-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg-color: #1e1e1e;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --border-color: #424242;
+        }
+        
+        /* SweetAlert2 Dark Mode Styles */
+        body.dark-mode .swal2-popup {
+            background-color: var(--card-bg-color) !important;
+            color: var(--text-color) !important;
+        }
+        body.dark-mode .swal2-title {
+            color: var(--primary-color) !important;
+        }
+        body.dark-mode .swal2-input {
+            background-color: var(--background-color) !important;
+            color: var(--text-color) !important;
+            border-color: var(--border-color) !important;
+        }
+        body.dark-mode .swal2-confirm {
+            background-color: var(--primary-color) !important;
+        }
+        body.dark-mode .swal2-cancel {
+            background-color: #424242 !important;
+        }
+
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: var(--card-bg-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 28px;
+            margin: 0;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #clock {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        /* Dark Mode Toggle */
+        .theme-switch-wrapper { display: flex; align-items: center; }
+        .theme-switch { display: inline-block; height: 24px; position: relative; width: 50px; }
+        .theme-switch input { display: none; }
+        .slider { background-color: #ccc; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 34px; }
+        .slider:before { background-color: #fff; bottom: 3px; content: ""; height: 18px; left: 4px; position: absolute; transition: .4s; width: 18px; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        /* Card Styles */
+        .card {
+            background-color: var(--card-bg-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .main-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Search Bar */
+        #search-bar {
+            width: 300px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 16px;
+            background-color: var(--card-bg-color);
+            color: var(--text-color);
+        }
+        
+        #student-count {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        /* Student Grid */
+        #student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .student-card {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            cursor: pointer;
+            opacity: 0;
+            transform: scale(0.95);
+            animation: popIn 0.5s ease forwards;
+        }
+        .student-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+            border: 4px solid var(--primary-color);
+        }
+        .student-info h3 { margin: 0 0 5px 0; color: var(--primary-color); }
+        .student-info p { margin: 0; font-size: 14px; line-height: 1.5; word-break: break-word; }
+        
+        .no-students { text-align: center; padding: 40px; font-size: 18px; color: var(--text-color); }
+
+        @keyframes popIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-clipboard-user"></i> Smart Dashboard</h1>
+            <div class="header-controls">
+                <div id="clock"></div>
+                <div class="theme-switch-wrapper">
+                    <label class="theme-switch" for="dark-mode-toggle">
+                        <input type="checkbox" id="dark-mode-toggle" />
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </header>
+
+        <div class="card">
+            <div class="main-controls">
+                <input type="text" id="search-bar" placeholder="Search by name or UID...">
+                <span id="student-count"></span>
+                <button id="add-student-btn"><i class="fas fa-plus"></i> Add / Update Student</button>
+            </div>
+            <div id="student-grid">
+                 <div class="no-students">Loading students...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Use window.onload to ensure all scripts including external ones are ready
+        window.onload = function() {
+            if (typeof google === 'undefined' || typeof google.script === 'undefined' || typeof google.script.run === 'undefined') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Connection Error',
+                    text: 'Could not connect to Google Scripts. Please refresh the page.'
+                });
+                return;
+            }
+
+            // Initialize functions
+            updateClock();
+            setInterval(updateClock, 1000);
+            setupDarkMode();
+            loadStudents();
+
+            // Event Listeners
+            document.getElementById("add-student-btn").addEventListener("click", () => showStudentFormModal());
+            document.getElementById("search-bar").addEventListener("keyup", filterStudents);
+        };
+
+        // --- Core Functions ---
+
+        function loadStudents() {
+            google.script.run.withSuccessHandler(displayStudents).getStudents();
+        }
+
+        function displayStudents(students) {
+            console.log("Data received from backend:", students); // Added for debugging
+            const grid = document.getElementById("student-grid");
+            const countDisplay = document.getElementById("student-count");
+            grid.innerHTML = "";
+            
+            if (!students || students.length === 0) {
+                grid.innerHTML = "<p class='no-students'>No students registered yet.</p>";
+                countDisplay.textContent = "0 Students";
+                return;
+            }
+            
+            countDisplay.textContent = `Showing ${students.length} Students`;
+            window.allStudents = students; // Store for filtering
+            
+            const TOTAL_DAYS = 100; // Define total days for percentage calculation
+
+            students.forEach((student, index) => {
+                // This try-catch block will prevent one bad record from crashing the whole list
+                try {
+                    // Check if essential data exists, otherwise skip this record
+                    if (!student || !student.name || !student.uid) {
+                        console.error("Skipping malformed student record at index:", index, student);
+                        return; // This is like 'continue' in a forEach loop
+                    }
+                    
+                    // Calculate Attendance Percentage
+                    const attendance = student.attendance || 0;
+                    const percentage = (attendance / TOTAL_DAYS) * 100;
+
+                    const card = document.createElement("div");
+                    card.className = "card student-card";
+                    card.style.animationDelay = `${index * 0.05}s`;
+                    card.dataset.name = student.name.toLowerCase();
+                    card.dataset.uid = student.uid.toLowerCase();
+                    
+                    card.onclick = () => showStudentFormModal(student); // Open modal on click
+
+                    const photoUrl = student.photoUrl || 'https://placehold.co/100x100/EFEFEF/333?text=?';
+                    // Use default values if any data is missing for display
+                    card.innerHTML = `
+                        <img src="${photoUrl}" class="student-photo" onerror="this.src='https://placehold.co/100x100/EFEFEF/333?text=Error'">
+                        <div class="student-info">
+                            <h3>${student.name || 'No Name'}</h3>
+                            <p><strong>UID:</strong> ${student.uid || 'No UID'}</p>
+                            <p><strong>Notice:</strong> ${student.notice || ''}</p>
+                            <p><strong>Attendance:</strong> ${attendance} / ${TOTAL_DAYS} days (${percentage.toFixed(1)}%)</p>
+                            <p><strong>Last Scan:</strong> ${student.lastUpdated || 'N/A'}</p>
+                        </div>`;
+                    grid.appendChild(card);
+
+                } catch (e) {
+                    console.error("Error rendering a student card:", e, "Problematic student data:", student);
+                }
+            });
+        }
+
+        // --- Modal Form Logic ---
+        
+        async function showStudentFormModal(student = null) {
+            const isUpdate = student !== null;
+            
+            const { value: formValues } = await Swal.fire({
+                title: isUpdate ? 'Update Student Details' : 'Add New Student',
+                html: `
+                    <input id="swal-uid" class="swal2-input" placeholder="Student UID (No spaces)" value="${isUpdate ? (student.uid || '') : ''}">
+                    <input id="swal-name" class="swal2-input" placeholder="Student Name" value="${isUpdate ? (student.name || '') : ''}">
+                    <input id="swal-notice" class="swal2-input" placeholder="Notice" value="${isUpdate ? (student.notice || '') : ''}">
+                    <input id="swal-photoUrl" class="swal2-input" placeholder="Photo URL" value="${isUpdate ? (student.photoUrl || '') : ''}">
+                `,
+                focusConfirm: false,
+                showCancelButton: true,
+                confirmButtonText: 'Save',
+                preConfirm: () => {
+                    return {
+                        uid: document.getElementById('swal-uid').value,
+                        name: document.getElementById('swal-name').value,
+                        notice: document.getElementById('swal-notice').value,
+                        photoUrl: document.getElementById('swal-photoUrl').value
+                    };
+                }
+            });
+
+            if (formValues) {
+                if (!formValues.uid || !formValues.name || !formValues.notice) {
+                    Swal.fire('Validation Error', 'UID, Name, and Notice are required fields.', 'error');
+                    return;
+                }
+                
+                Swal.fire({
+                    title: 'Saving...',
+                    text: 'Please wait.',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
+                });
+
+                google.script.run.withSuccessHandler(onFormSuccess).addOrUpdateStudent(formValues);
+            }
+        }
+
+        function onFormSuccess(message) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: message,
+                timer: 2000,
+                showConfirmButton: false
+            });
+            loadStudents();
+        }
+
+        // --- UI Enhancement Functions ---
+
+        function filterStudents() {
+            const filter = document.getElementById("search-bar").value.toLowerCase();
+            const cards = document.querySelectorAll(".student-card");
+            cards.forEach(card => {
+                if (card.dataset.name.includes(filter) || card.dataset.uid.includes(filter)) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerHTML = now.toLocaleString('en-US', {
+                dateStyle: 'full',
+                timeStyle: 'medium'
+            });
+        }
+
+        function setupDarkMode() {
+            const toggle = document.getElementById("dark-mode-toggle");
+            const savedTheme = localStorage.getItem('theme');
+
+            if (savedTheme === "dark") {
+                document.body.classList.add("dark-mode");
+                toggle.checked = true;
+            }
+
+            toggle.addEventListener("change", () => {
+                if (toggle.checked) {
+                    document.body.classList.add("dark-mode");
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.body.classList.remove("dark-mode");
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
