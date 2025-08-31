@@ -71,33 +71,6 @@ This project uses a client-server model where the Google Sheet acts as the centr
 |                    | **VCC** | **3V3** |
 |                    | **GND** | **GND** |
 
----
-
-## Setup and Installation
-
-This is a full-stack project. Follow these steps carefully.
-
-### Step 1: Set up the Google Sheet
-1.  Create a new Google Sheet.
-2.  Set up the following headers in the first row: `UID`, `Name`, `Notice`, `AttendanceDays`, `LastUpdated`, `PhotoURL`.
-3.  Populate it with some sample data. Remember to format the UIDs without spaces (e.g., `34DB3B06`).
-
-### Step 2: Deploy the Google Apps Script
-1.  In your sheet, go to `Extensions > Apps Script`.
-2.  Paste the contents of `Code.gs` into the script editor.
-3.  Create a new HTML file (`File > New > HTML file`) and name it `Index.html`. Paste the contents of the provided `Index.html` file into it.
-4.  Click **Deploy > New deployment**.
-5.  Select Type **Web app**.
-6.  Under "Who has access", select **Anyone**.
-7.  Click **Deploy**.
-8.  **Important:** Copy the generated **Web app URL**. You will need this for the ESP32 code.
-
-### Step 3: Configure and Upload the ESP32 Code
-1.  Open the main `.ino` sketch file in the Arduino IDE.
-2.  Install all the required libraries from the Library Manager.
-3.  Fill in your network credentials for `WIFI_SSID` and `WIFI_PASS`.
-4.  Paste the **Web app URL** you copied into the `GOOGLE_SCRIPT_URL` variable.
-5.  Connect your ESP32, select the correct COM port, and click **Upload**.
 
 ---
 
